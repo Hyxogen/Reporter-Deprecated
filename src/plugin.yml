@@ -1,0 +1,13 @@
+name: Reporter
+main: me.daansander.reporter.Reporter
+version: 1.0
+commands:
+   Report:
+      description: Report a player.
+      usage: /<command>
+   isreported:
+      description: Report a player.
+      usage: /<command>
+   rreload:
+      description: Reload the config.
+      usage: /<command>
