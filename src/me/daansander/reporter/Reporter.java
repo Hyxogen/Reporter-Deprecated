@@ -108,7 +108,11 @@ public class Reporter extends JavaPlugin implements PluginMessageListener {
                 String player = settings.getConfig().get("message-report").toString().replace("%target%", t.getName()).replace("%reason%", details).replaceAll("&", "§");
                 p.sendMessage(player);
                 //p.sendMessage(ChatColor.RED + "Reported the player: " + ChatColor.GOLD + t.getName() + ChatColor.RED + " with the reason: " + ChatColor.GOLD + details);
-                new Report(t.getName(), p.getName(), details);
+                if(!settings.getConfig().getBoolean("mysql-use-uuid")) {
+                    new Report(t.getName(), p.getName(), details);
+                } else {
+                    new Report(t.getUniqueId().toString(), p.getUniqueId().toString(), details);
+                }
             } else {
                 p.sendMessage(ChatColor.RED + "Insufficient permissions!");
                 return true;
