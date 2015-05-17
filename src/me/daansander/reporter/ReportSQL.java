@@ -37,4 +37,7 @@ public class ReportSQL {
             e.printStackTrace();
         }
     }
+    public String getReport() {
+
+    }
 }
