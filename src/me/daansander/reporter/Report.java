@@ -21,13 +21,17 @@ public class Report {
         reports.add(this);
         reported.add(name);
 
-        int next = 1;
-        if (Reporter.config.getConfigurationSection(name) != null)
-            for (String report : Reporter.config.getConfigurationSection(name).getKeys(false))
-                next++;
-        Reporter.config.set(name + "." + next + ".reason", "" + details);
-        Reporter.config.set(name + "." + next + ".reporter", "" + reporter);
-        Reporter.plugin.saveConfig();
+        if(!Reporter.getPlugin().settings.getConfig().getBoolean("mysql")) {
+            int next = 1;
+            if (Reporter.getPlugin().config.getConfigurationSection(name) != null)
+                for (String report : Reporter.getPlugin().config.getConfigurationSection(name).getKeys(false))
+                    next++;
+            Reporter.getPlugin().config.set(name + "." + next + ".reason", "" + details);
+            Reporter.getPlugin().config.set(name + "." + next + ".reporter", "" + reporter);
+            Reporter.plugin.saveConfig();
+        } else {
+            Reporter.getPlugin().getReportSQL().createReport(reporter, name, details);
+        }
     }
 
     public boolean isReported(String player) {

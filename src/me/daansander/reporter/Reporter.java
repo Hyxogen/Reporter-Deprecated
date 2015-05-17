@@ -12,28 +12,33 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class Reporter
-        extends JavaPlugin {
-    Setting settings = Setting.getInstance();
+public class Reporter extends JavaPlugin implements PluginMessageListener {
+
+    public Setting settings = Setting.getInstance();
     private HashMap<String, Integer> cooldown = new HashMap();
     public static Reporter plugin = null;
     public Permission report = new Permission("reporter.report");
     public Permission creport = new Permission("reporter.creport");
     public Permission adminmessage = new Permission("reporter.am");
     public Permission reload = new Permission("reporter.reload");
-    public static FileConfiguration config;
+    public FileConfiguration config;
+    public ReportSQL sql;
 
     public void onEnable() {
         config = getConfig();
         plugin = this;
         this.settings.setup(this);
-        this.settings.saveDefaultConfig();
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
+        if(settings.getConfig().getBoolean("mysql")) {
+            sql = new ReportSQL();
+            sql.connect();
+        }
         saveDefaultConfig();
         getServer().getScheduler().runTaskTimer(this, new Runnable() {
             public void run() {
@@ -46,7 +51,29 @@ public class Reporter
             }
         }, 0L, 20L);
     }
+    public ReportSQL getReportSQL() {
+        return sql;
+    }
+    public FileConfiguration getConfig() {
+        return config;
+    }
+    public static Reporter getPlugin() {
+        return plugin;
+    }
+    @Override
+    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+        if (!channel.equals("BungeeCord")) {
+            return;
+        }
+        ByteArrayDataInput in = ByteStreams.newDataInput(message);
+        String subchannel = in.readUTF();
+        if (subchannel.equals("SomeSubChannel")) {
+            // Use the code sample in the 'Response' sections below to read
+            // the data.
+        }
+    }
 
+    @SuppressWarnings("deprecation")
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if ((cmd.getName().equalsIgnoreCase("report")) && ((sender instanceof Player))) {
             Player p = (Player) sender;

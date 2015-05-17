@@ -30,6 +30,7 @@ public class Setting
             try
             {
                 this.cfile.createNewFile();
+                p.saveResource("cooldowns.yml", true);
             }
             catch (IOException e)
             {

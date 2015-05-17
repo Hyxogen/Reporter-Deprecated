@@ -5,4 +5,11 @@ message-report: '&cReported the player &6%target% with the reason: &6%reason%'
 message-adminnote: '&6%target% &chas been reported with the reason: &6%reason%'
 message-checkreport: '&cReported by &6%reporter% &cwith reason: &6%reason%'
 cooldown-message: '&cYou cant report for &6%time% &cseconds!'
+mysql: false
+mysql-host: 0.0.0.0
+mysql-port: 3306
+mysql-db: reporter
+mysql-username: admin
+mysql-password: root
+mysql-use-uuid: false
 cooldown: 20
