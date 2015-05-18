@@ -38,6 +38,11 @@ public class ReportSQL {
         }
     }
     public String getReport() {
+        try {
 
+        }catch (SQLException e) {
+            e.printStackTrace();
+
+        }
     }
 }
