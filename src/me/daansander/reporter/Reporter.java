@@ -122,30 +122,53 @@ public class Reporter extends JavaPlugin implements PluginMessageListener {
         Player t;
         if ((cmd.getName().equalsIgnoreCase("isreported")) && ((sender instanceof Player))) {
             p = (Player) sender;
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "1");
             if (!p.hasPermission("reporter.creport")) {
                 p.sendMessage(ChatColor.RED + "Insufficient permissions!");
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "2");
                 return true;
             }
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "3");
             if ((args.length < 1) || (args.length > 1)) {
                 p.sendMessage(ChatColor.RED + "Incorrect arguments usage: /isreported <Player>");
                 return true;
             }
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "4");
             t = Bukkit.getPlayerExact(args[0]);
             if (t == null) {
                 p.sendMessage(ChatColor.RED + "Could not find the player: " + args[0]);
                 return true;
             }
-            if (!config.contains(t.getName())) {
-                p.sendMessage(ChatColor.RED + "The player: " + args[0] + " is not reported");
-                return true;
-            }
-            for (String index : config.getConfigurationSection(t.getName()).getKeys(false)) {
-                String ParamInfo = settings.getConfig().get("message-checkreport").toString().replace("%reporter%", config.get(t.getName() + "." + index + ".reporter").toString()).replace("%reason%",
-                        config.get(t.getName() + "." + index + ".reason").toString()).replaceAll("&", "§");
-                String info = config.get(t.getName() + "." + index + ".reason").toString();
-                String reporter = config.get(t.getName() + "." + index + ".reporter").toString();
-                p.sendMessage(ParamInfo);
-                //p.sendMessage("Reported by " + reporter + " with reason: " + info);
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "8");
+            if(!settings.getConfig().getBoolean("mysql")) {
+                if (!config.contains(t.getName())) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "9");
+                    p.sendMessage(ChatColor.RED + "The player: " + args[0] + " is not reported");
+                    return true;
+                }
+            } /*else {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "100");
+                if(!sql.isReported(p.getName())) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "7");
+                    p.sendMessage(ChatColor.RED + "The player: " + args[0] + " is not reported");
+                    return true;
+                }
+            }*/
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "8285");
+            if(!settings.getConfig().getString("mysql").equalsIgnoreCase("true")) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "10");
+                for (String index : config.getConfigurationSection(t.getName()).getKeys(false)) {
+                    String ParamInfo = settings.getConfig().get("message-checkreport").toString().replace("%reporter%", config.get(t.getName() + "." + index + ".reporter").toString()).replace("%reason%",
+                            config.get(t.getName() + "." + index + ".reason").toString()).replaceAll("&", "§");
+                    String info = config.get(t.getName() + "." + index + ".reason").toString();
+                    String reporter = config.get(t.getName() + "." + index + ".reporter").toString();
+                    p.sendMessage(ParamInfo);
+                    //p.sendMessage("Reported by " + reporter + " with reason: " + info);
+                }
+            } else {
+                for(String report : sql.getReport(p.getName())) {
+                    p.sendMessage(ChatColor.RED +"" + report + "");
+                }
             }
         } if(cmd.getName().equalsIgnoreCase("rreload")) {
             Player ParamPlayer = (Player) sender;

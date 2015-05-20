@@ -39,8 +39,44 @@ public class Report {
         return false;
     }
 
-    public String getReporter(String reportedplayer) {
+    public String getReporter() {
         return reporter;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setReporter(String reporter) {
+        this.reporter = reporter;
+    }
+
+    public static ArrayList<Report> getReports() {
+        return reports;
+    }
+
+    public static void setReports(ArrayList<Report> reports) {
+        Report.reports = reports;
+    }
+
+    public static ArrayList<String> getReported() {
+        return reported;
+    }
+
+    public static void setReported(ArrayList<String> reported) {
+        Report.reported = reported;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public String getDetails(String name) {

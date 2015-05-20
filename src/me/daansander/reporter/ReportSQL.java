@@ -1,10 +1,13 @@
 package me.daansander.reporter;
 
+import io.netty.handler.codec.http.HttpContentEncoder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Daan on 12-5-2015.
@@ -37,12 +40,35 @@ public class ReportSQL {
             e.printStackTrace();
         }
     }
-    public String getReport() {
+    public ArrayList<String> getReport(String name) {
         try {
-
+            Statement sql =  mySql.getConnection().createStatement();
+            ResultSet resultSet = sql.executeQuery("SELECT * FROM `reports` WHERE `reportedplayer`='" + name + "';");
+            ArrayList<String> rowValues = new ArrayList<String>();
+            while (resultSet.next()) {
+                rowValues.add(resultSet.getString("reason"));
+            }
+            return rowValues;
         }catch (SQLException e) {
             e.printStackTrace();
-
+            return null;
         }
+    }
+    public boolean isReported(String name) {
+        try {
+            Statement sql = mySql.getConnection().createStatement();
+            ResultSet resultSet = sql.executeQuery("SELECT * FROM `reports` WHERE `reportedplayer`='" + name + "';");
+            if(resultSet.next()) {
+                sql.close();
+                resultSet.close();
+                return true;
+            }
+            sql.close();
+            resultSet.close();
+            return false;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
